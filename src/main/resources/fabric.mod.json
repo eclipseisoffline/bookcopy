@@ -3,10 +3,21 @@
   "id": "bookcopy",
   "version": "${version}",
   "name": "Book Copy",
-  "description": "",
-  "authors": [],
-  "contact": {},
-  "license": "GPv3",
+  "description": "Book Copy adds a simple client-side `/boopcopy` command",
+  "authors": [
+    {
+      "name": "eclipseisoffline",
+      "contact": {
+        "homepage": "https://github.com/eclipseisoffline"
+      }
+    }
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/book-copy",
+    "issues": "https://github.com/eclipseisoffline/bookcopy/issues",
+    "sources": "https://github.com/eclipseisoffline/bookcopy"
+  },
+  "license": "GPLv3",
   "icon": "assets/bookcopy/icon.png",
   "environment": "client",
   "entrypoints": {
