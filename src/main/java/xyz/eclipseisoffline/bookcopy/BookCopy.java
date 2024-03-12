@@ -3,7 +3,6 @@ package xyz.eclipseisoffline.bookcopy;
 import com.mojang.brigadier.Message;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import java.io.File;
 import java.io.IOException;
@@ -112,14 +111,12 @@ public class BookCopy implements ClientModInitializer {
                                                                 "pages");
                                                         ListTag newPages = new ListTag();
                                                         assert pages != null;
-                                                        pages.forEach(tag -> {
-                                                            newPages.add(StringTag.valueOf(
-                                                                    ParserUtils.parseJson(
-                                                                                    new StringReader(
-                                                                                            tag.getAsString()),
-                                                                                    ComponentSerialization.CODEC)
-                                                                            .getString()));
-                                                        });
+                                                        pages.forEach(tag -> newPages.add(StringTag.valueOf(
+                                                                ParserUtils.parseJson(
+                                                                                new StringReader(
+                                                                                        tag.getAsString()),
+                                                                                ComponentSerialization.CODEC)
+                                                                        .getString())));
                                                         bookCompound.remove("pages");
                                                         bookCompound.put("pages", newPages);
                                                     }

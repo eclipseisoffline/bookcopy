@@ -18,8 +18,7 @@ public class BookSuggestionProvider implements SuggestionProvider<FabricClientCo
 
     @Override
     public CompletableFuture<Suggestions> getSuggestions(
-            CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder)
-            throws CommandSyntaxException {
+            CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) {
         List<String> books;
         try {
             books = Arrays.stream(
