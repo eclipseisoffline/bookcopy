@@ -11,6 +11,8 @@ This mod is licensed under GNU GPLv3.
 
 ## Usage
 
+Mod builds can be found [here](https://github.com/eclipseisoffline/bookcopy/packages/2096411).
+
 This mod is currently available for Minecraft 1.20.4 with Fabric loader 0.15.7 or later. Version
 port requests can be made at the issue tracker.
 
