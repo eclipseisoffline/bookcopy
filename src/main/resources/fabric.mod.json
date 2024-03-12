@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "bookcopy",
+  "version": "${version}",
+  "name": "Book Copy",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "GPv3",
+  "icon": "assets/bookcopy/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "xyz.eclipseisoffline.bookcopy.BookCopy"
+    ],
+    "main": []
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
