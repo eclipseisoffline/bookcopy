@@ -1,7 +1,10 @@
 package xyz.eclipseisoffline.bookcopy;
 
+import com.mojang.brigadier.Message;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -44,10 +47,8 @@ public class BookCopy implements ClientModInitializer {
                                                     ItemStack book = context.getSource().getPlayer()
                                                             .getMainHandItem();
                                                     if (!book.is(Items.WRITABLE_BOOK)) {
-                                                        context.getSource().sendError(
-                                                                Component.literal(
-                                                                        "Must hold a book"));
-                                                        return 1;
+                                                        Message errorMessage = Component.literal("Must hold a book and quill");
+                                                        throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
                                                     ListTag pages;
@@ -57,26 +58,20 @@ public class BookCopy implements ClientModInitializer {
                                                                         StringArgumentType.getString(
                                                                                 context, "name")));
                                                         if (bookNBT == null) {
-                                                            context.getSource().sendError(
-                                                                    Component.literal(
-                                                                            "Failed reading book file"));
-                                                            return 1;
+                                                            Message errorMessage = Component.literal("Failed reading book file (no NBT data found)");
+                                                            throw new SimpleCommandExceptionType(errorMessage).create();
                                                         }
 
                                                         pages = (ListTag) bookNBT.get("pages");
                                                         if (pages == null) {
-                                                            context.getSource().sendError(
-                                                                    Component.literal(
-                                                                            "Failed reading book pages from file"));
-                                                            return 1;
+                                                            Message errorMessage = Component.literal("Failed reading book file (no page content found)");
+                                                            throw new SimpleCommandExceptionType(errorMessage).create();
                                                         }
                                                     } catch (IOException exception) {
-                                                        context.getSource().sendError(
-                                                                Component.literal(
-                                                                        "Failed reading book file"));
+                                                        Message errorMessage = Component.literal("Failed reading book file (an error occurred while reading, please check your Minecraft logs)");
                                                         LOGGER.error("Failed reading book file!",
                                                                 exception);
-                                                        return 1;
+                                                        throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
                                                     List<String> pageStrings = pages.stream()
@@ -89,7 +84,7 @@ public class BookCopy implements ClientModInitializer {
                                                     context.getSource().sendFeedback(
                                                             Component.literal(
                                                                     "Read book from file"));
-                                                    return 0;
+                                                    return pageStrings.size();
                                                 })
                                         )
                                 )
@@ -101,20 +96,17 @@ public class BookCopy implements ClientModInitializer {
                                                             .getMainHandItem();
                                                     if (!book.is(Items.WRITABLE_BOOK) && !book.is(
                                                             Items.WRITTEN_BOOK)) {
-                                                        context.getSource().sendError(
-                                                                Component.literal(
-                                                                        "Must hold a book"));
-                                                        return 1;
+                                                        Message errorMessage = Component.literal("Must hold a book and quill or written book");
+                                                        throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
                                                     CompoundTag bookCompound = book.getTag();
                                                     if (bookCompound == null
                                                             || bookCompound.get("pages") == null) {
-                                                        context.getSource().sendError(
-                                                                Component.literal(
-                                                                        "Pages NBT key doesn't exist"));
-                                                        return 1;
+                                                        Message errorMessage = Component.literal("Book has no content");
+                                                        throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
+
                                                     if (book.is(Items.WRITTEN_BOOK)) {
                                                         ListTag pages = (ListTag) bookCompound.get(
                                                                 "pages");
@@ -131,18 +123,17 @@ public class BookCopy implements ClientModInitializer {
                                                         bookCompound.remove("pages");
                                                         bookCompound.put("pages", newPages);
                                                     }
+
                                                     try {
                                                         NbtIo.write(bookCompound,
                                                                 getBookSavePath().resolve(
                                                                         StringArgumentType.getString(
                                                                                 context, "name")));
                                                     } catch (IOException exception) {
-                                                        context.getSource().sendError(
-                                                                Component.literal(
-                                                                        "Failed saving book to file"));
-                                                        LOGGER.error("Failed saving book to file!",
+                                                        Message errorMessage = Component.literal("Failed saving book to file (an error occurred while saving, please check your Minecraft logs)");
+                                                        LOGGER.error("Failed saving book file!",
                                                                 exception);
-                                                        return 1;
+                                                        throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
                                                     context.getSource().sendFeedback(
