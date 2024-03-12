@@ -3,7 +3,7 @@
   "id": "bookcopy",
   "version": "${version}",
   "name": "Book Copy",
-  "description": "Book Copy adds a simple client-side `/boopcopy` command",
+  "description": "Book Copy adds a simple client-side `/bookcopy` command",
   "authors": [
     {
       "name": "eclipseisoffline",

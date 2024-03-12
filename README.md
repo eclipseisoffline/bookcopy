@@ -1,6 +1,6 @@
 # Book Copy
 
-This mod adds a simple client-side `/boopcopy` command, which allows you to save written books and
+This mod adds a simple client-side `/bookcopy` command, which allows you to save written books and
 import them later in another book.
 
 Feel free to report any bugs, or suggest new features, at the issue tracker.
