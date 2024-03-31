@@ -1,7 +1,6 @@
 package xyz.eclipseisoffline.bookcopy;
 
 import com.mojang.brigadier.Message;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import java.io.File;
@@ -13,14 +12,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.commands.ParserUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -46,31 +43,40 @@ public class BookCopy implements ClientModInitializer {
                                                     ItemStack book = context.getSource().getPlayer()
                                                             .getMainHandItem();
                                                     if (!book.is(Items.WRITABLE_BOOK)) {
-                                                        Message errorMessage = Component.literal("Must hold a book and quill");
-                                                        throw new SimpleCommandExceptionType(errorMessage).create();
+                                                        Message errorMessage = Component.literal(
+                                                                "Must hold a book and quill");
+                                                        throw new SimpleCommandExceptionType(
+                                                                errorMessage).create();
                                                     }
 
                                                     ListTag pages;
                                                     try {
                                                         CompoundTag bookNBT = NbtIo.read(
                                                                 getBookSavePath().resolve(
-                                                                        StringArgumentType.getString(
-                                                                                context, "name")));
+                                                                                StringArgumentType.getString(
+                                                                                        context, "name"))
+                                                                        .toFile());
                                                         if (bookNBT == null) {
-                                                            Message errorMessage = Component.literal("Failed reading book file (no NBT data found)");
-                                                            throw new SimpleCommandExceptionType(errorMessage).create();
+                                                            Message errorMessage = Component.literal(
+                                                                    "Failed reading book file (no NBT data found)");
+                                                            throw new SimpleCommandExceptionType(
+                                                                    errorMessage).create();
                                                         }
 
                                                         pages = (ListTag) bookNBT.get("pages");
                                                         if (pages == null) {
-                                                            Message errorMessage = Component.literal("Failed reading book file (no page content found)");
-                                                            throw new SimpleCommandExceptionType(errorMessage).create();
+                                                            Message errorMessage = Component.literal(
+                                                                    "Failed reading book file (no page content found)");
+                                                            throw new SimpleCommandExceptionType(
+                                                                    errorMessage).create();
                                                         }
                                                     } catch (IOException exception) {
-                                                        Message errorMessage = Component.literal("Failed reading book file (an error occurred while reading, please check your Minecraft logs)");
+                                                        Message errorMessage = Component.literal(
+                                                                "Failed reading book file (an error occurred while reading, please check your Minecraft logs)");
                                                         LOGGER.error("Failed reading book file!",
                                                                 exception);
-                                                        throw new SimpleCommandExceptionType(errorMessage).create();
+                                                        throw new SimpleCommandExceptionType(
+                                                                errorMessage).create();
                                                     }
 
                                                     List<String> pageStrings = pages.stream()
@@ -95,15 +101,19 @@ public class BookCopy implements ClientModInitializer {
                                                             .getMainHandItem();
                                                     if (!book.is(Items.WRITABLE_BOOK) && !book.is(
                                                             Items.WRITTEN_BOOK)) {
-                                                        Message errorMessage = Component.literal("Must hold a book and quill or written book");
-                                                        throw new SimpleCommandExceptionType(errorMessage).create();
+                                                        Message errorMessage = Component.literal(
+                                                                "Must hold a book and quill or written book");
+                                                        throw new SimpleCommandExceptionType(
+                                                                errorMessage).create();
                                                     }
 
                                                     CompoundTag bookCompound = book.getTag();
                                                     if (bookCompound == null
                                                             || bookCompound.get("pages") == null) {
-                                                        Message errorMessage = Component.literal("Book has no content");
-                                                        throw new SimpleCommandExceptionType(errorMessage).create();
+                                                        Message errorMessage = Component.literal(
+                                                                "Book has no content");
+                                                        throw new SimpleCommandExceptionType(
+                                                                errorMessage).create();
                                                     }
 
                                                     if (book.is(Items.WRITTEN_BOOK)) {
@@ -111,12 +121,11 @@ public class BookCopy implements ClientModInitializer {
                                                                 "pages");
                                                         ListTag newPages = new ListTag();
                                                         assert pages != null;
-                                                        pages.forEach(tag -> newPages.add(StringTag.valueOf(
-                                                                ParserUtils.parseJson(
-                                                                                new StringReader(
-                                                                                        tag.getAsString()),
-                                                                                ComponentSerialization.CODEC)
-                                                                        .getString())));
+                                                        pages.forEach(tag -> newPages.add(
+                                                                StringTag.valueOf(
+                                                                        Component.Serializer.fromJson(
+                                                                                        tag.getAsString())
+                                                                                .getString())));
                                                         bookCompound.remove("pages");
                                                         bookCompound.put("pages", newPages);
                                                     }
@@ -124,13 +133,16 @@ public class BookCopy implements ClientModInitializer {
                                                     try {
                                                         NbtIo.write(bookCompound,
                                                                 getBookSavePath().resolve(
-                                                                        StringArgumentType.getString(
-                                                                                context, "name")));
+                                                                                StringArgumentType.getString(
+                                                                                        context, "name"))
+                                                                        .toFile());
                                                     } catch (IOException exception) {
-                                                        Message errorMessage = Component.literal("Failed saving book to file (an error occurred while saving, please check your Minecraft logs)");
+                                                        Message errorMessage = Component.literal(
+                                                                "Failed saving book to file (an error occurred while saving, please check your Minecraft logs)");
                                                         LOGGER.error("Failed saving book file!",
                                                                 exception);
-                                                        throw new SimpleCommandExceptionType(errorMessage).create();
+                                                        throw new SimpleCommandExceptionType(
+                                                                errorMessage).create();
                                                     }
 
                                                     context.getSource().sendFeedback(
