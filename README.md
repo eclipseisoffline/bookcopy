@@ -13,7 +13,7 @@ This mod is licensed under GNU GPLv3.
 
 Mod builds can be found [here](https://github.com/eclipseisoffline/bookcopy/packages/2096411) and on [Modrinth](https://modrinth.com/mod/book-copy).
 
-This mod is currently available for Minecraft 1.20.4 and 1.20.1 with Fabric loader 0.15.7 or later.
+This mod is currently available for Minecraft 1.20.5, 1.20.4 (no longer updated) and 1.20.1 with Fabric loader 0.15.9 or later.
 Version port requests can be made at the issue tracker. The Fabric API is required.
 
 This mod adds one simple command, `/bookcopy`. It can be used as follows:
