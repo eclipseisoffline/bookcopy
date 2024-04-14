@@ -1,7 +1,6 @@
 package xyz.eclipseisoffline.bookcopy;
 
 import com.mojang.brigadier.Message;
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import java.io.File;
@@ -13,17 +12,18 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.commands.ParserUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.game.ServerboundEditBookPacket;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.BookContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,8 +68,7 @@ public class BookCopy implements ClientModInitializer {
                                                         }
                                                     } catch (IOException exception) {
                                                         Message errorMessage = Component.literal("Failed reading book file (an error occurred while reading, please check your Minecraft logs)");
-                                                        LOGGER.error("Failed reading book file!",
-                                                                exception);
+                                                        LOGGER.error("Failed reading book file!", exception);
                                                         throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
@@ -99,27 +98,51 @@ public class BookCopy implements ClientModInitializer {
                                                         throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
-                                                    CompoundTag bookCompound = book.getTag();
-                                                    if (bookCompound == null
-                                                            || bookCompound.get("pages") == null) {
+                                                    CompoundTag bookCompound = new CompoundTag();
+
+                                                    BookContent<?, ?> bookContent;
+                                                    if (book.is(Items.WRITABLE_BOOK)) {
+                                                        bookContent = book.get(DataComponents.WRITABLE_BOOK_CONTENT);
+                                                    } else {
+                                                        bookContent = book.get(DataComponents.WRITTEN_BOOK_CONTENT);
+                                                    }
+
+                                                    if (bookContent == null
+                                                            || bookContent.pages().isEmpty()) {
                                                         Message errorMessage = Component.literal("Book has no content");
                                                         throw new SimpleCommandExceptionType(errorMessage).create();
                                                     }
 
-                                                    if (book.is(Items.WRITTEN_BOOK)) {
-                                                        ListTag pages = (ListTag) bookCompound.get(
-                                                                "pages");
-                                                        ListTag newPages = new ListTag();
-                                                        assert pages != null;
-                                                        pages.forEach(tag -> newPages.add(StringTag.valueOf(
-                                                                ParserUtils.parseJson(
-                                                                                new StringReader(
-                                                                                        tag.getAsString()),
-                                                                                ComponentSerialization.CODEC)
-                                                                        .getString())));
-                                                        bookCompound.remove("pages");
-                                                        bookCompound.put("pages", newPages);
+
+                                                    List<?> pages = bookContent.pages();
+                                                    ListTag pagesTag = new ListTag();
+                                                    for (Object page : pages) {
+                                                        String pageString;
+                                                        if (page instanceof Filterable<?> filterablePage) {
+                                                            Object notFiltered = filterablePage.get(false);
+                                                            if (notFiltered instanceof Component pageComponent) {
+                                                                pageString = pageComponent.getString();
+                                                            } else if (notFiltered instanceof String rawString) {
+                                                                pageString = rawString;
+                                                            } else {
+                                                                LOGGER.warn(
+                                                                        "Found unexpected filtered page type {}! If you are not a developer, report this issue on the issue tracker at Github",
+                                                                        notFiltered.getClass());
+                                                                continue;
+                                                            }
+                                                        } else if (page instanceof Component pageComponent) {
+                                                            pageString = pageComponent.getString();
+                                                        } else if (page instanceof String rawString) {
+                                                            pageString = rawString;
+                                                        } else {
+                                                            LOGGER.warn(
+                                                                    "Found unexpected page type {}! If you are not a developer, report this issue on the issue tracker at Github",
+                                                                    page.getClass());
+                                                            continue;
+                                                        }
+                                                        pagesTag.add(StringTag.valueOf(pageString));
                                                     }
+                                                    bookCompound.put("pages", pagesTag);
 
                                                     try {
                                                         NbtIo.write(bookCompound,
