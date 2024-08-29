@@ -192,7 +192,7 @@ public class BookCopy implements ClientModInitializer {
                             .append(Component.literal("Run ")
                                     .append(Component.literal(command)
                                             .withStyle(style -> style
-                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, command))
+                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command))
                                                     .withColor(ChatFormatting.BLUE)
                                                     .withUnderlined(true))))
                             .append(Component.literal(" to overwrite the saved book"))).create();
