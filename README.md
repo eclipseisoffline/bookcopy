@@ -11,22 +11,41 @@ Feel free to report any bugs, or suggest new features, at the issue tracker.
 
 ## License
 
-This mod is licensed under GNU GPLv3.
+This mod is licensed under GNU LGPLv3.
 
 ## Usage
 
 Mod builds can be found [here](https://github.com/eclipseisoffline/bookcopy/packages/2096411) and on [Modrinth](https://modrinth.com/mod/book-copy).
 
-This mod is currently available for Minecraft 1.21, 1.20.5+6/1.20.4 (no longer updated) and 1.20.1 with Fabric loader 0.15.11 or later.
+This mod is currently available for Minecraft 1.21+1 and 1.20.5+6/1.20.4/1.20.1 (no longer updated) with Fabric loader 0.16.3 or later.
 Version port requests can be made at the issue tracker. The Fabric API is required.
 
 This mod adds one simple command, `/bookcopy`. It can be used as follows:
 
-- `/bookcopy export <name>` - exports the contents of the book you're holding to the given filename.
-- `/bookcopy import <name>` - reads the contents of given filename and writes it to the book you're holding.
+- `/bookcopy export <name> [<overwrite>]` - exports the contents of the book you're holding to the given filename.
+  - Set `overwrite` to true to overwrite books.
+- `/bookcopy import <name> [<sign>]` - reads the contents of given filename and writes it to the book you're holding.
+  - Set `sign` to true to automatically sign the book after importing it. Only works if the book was saved with a title.
 
 When exporting, you can use a written book or a book and quill to read from. When importing, you can
 only use a book and quill, since the contents of a written book can't be updated.
 
-Book contents are stored in the NBT format at the `.minecraft/config/bookcopy` folder. Book contents
-can be transferred across worlds.
+Book contents are stored in the `.minecraft/config/bookcopy` folder. Book contents can be
+transferred across worlds.
+
+Below version `0.1.2-1.21.1`, book contents are stored in NBT. In version `0.1.2-1.21.1` support for
+reading JSON files was added, by adding `.json` at the end of your save names. JSON books are stored
+in the following format:
+
+```json
+{
+  "title": "Signed book title",
+  "pages": [
+    "This is a signed book.",
+    "This is the second page!",
+    "",
+    "An empty page then this!",
+    "Wow."
+  ]
+}
+```
