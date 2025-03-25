@@ -66,13 +66,13 @@ publishMods {
 
     modrinth {
         accessToken = providers.gradleProperty("MODRINTH_API_TOKEN")
-        projectId = "Xuf4fk5b"
+        projectId = "jkOtP64i"
         minecraftVersions.addAll(release_minecraft_versions.split(","))
     }
 
     github {
         accessToken = providers.gradleProperty("GITHUB_API_PUBLISH_TOKEN")
-        repository = "eclipseisoffline/customtimecycle"
+        repository = "eclipseisoffline/bookcopy"
         commitish = "main"
     }
 }
