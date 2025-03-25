@@ -121,7 +121,7 @@ public class BookCopy implements ClientModInitializer {
         }
 
         List<String> pageStrings = savedBook.pages();
-        int slot = context.getSource().getPlayer().getInventory().selected;
+        int slot = context.getSource().getPlayer().getInventory().getSelectedSlot();
         context.getSource().getPlayer().connection.send(new ServerboundEditBookPacket(slot, pageStrings, sign ? savedBook.title() : Optional.empty()));
         context.getSource().sendFeedback(
                 Component.literal("Read book from file"));
@@ -191,7 +191,7 @@ public class BookCopy implements ClientModInitializer {
                             .append(Component.literal("Run ")
                                     .append(Component.literal(command)
                                             .withStyle(style -> style
-                                                    .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, command))
+                                                    .withClickEvent(new ClickEvent.SuggestCommand(command))
                                                     .withColor(ChatFormatting.BLUE)
                                                     .withUnderlined(true))))
                             .append(Component.literal(" to overwrite the saved book"))).create();
