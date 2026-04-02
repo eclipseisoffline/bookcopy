@@ -138,6 +138,9 @@ public abstract class BookCopy {
         int slot = context.getSource().getLocalPlayer().getInventory().getSelectedSlot();
         context.getSource().getLocalPlayer().connection.send(new ServerboundEditBookPacket(slot, pageStrings, sign ? savedBook.title() : Optional.empty()));
         context.getSource().sendFeedback(Component.literal("Read book from file"));
+        if (savedBook.author().isPresent()) {
+            context.getSource().sendFeedback(Component.literal("The original author of the book was " + savedBook.author().get()));
+        }
         if (sign && savedBook.title().isEmpty()) {
             context.getSource().sendError(Component.literal("Your book wasn't signed because the saved copy didn't have a title saved!"));
             context.getSource().sendError(Component.literal("Please sign the book with the title you'd like, and save it again, for the sign feature to work."));
@@ -189,7 +192,9 @@ public abstract class BookCopy {
             pages.add(pageString);
         }
 
-        SavedBook saved = new SavedBook(bookContent instanceof WrittenBookContent written ? Optional.of(written.title().raw()) : Optional.empty(), pages);
+        Optional<WrittenBookContent> writtenBookContent = bookContent instanceof WrittenBookContent written ? Optional.of(written) : Optional.empty();
+        SavedBook saved = new SavedBook(writtenBookContent.map(WrittenBookContent::title).map(Filterable::raw), writtenBookContent.map(WrittenBookContent::author), pages);
+
         try {
             Path savePath = getBookSavePath().resolve(StringArgumentType.getString(context, "name"));
             if (Files.exists(savePath)) {
