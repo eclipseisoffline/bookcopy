@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    {
+      "name": "eclipseisoffline",
+      "contact": {
+        "homepage": "https://github.com/eclipseisoffline"
+      }
+    }
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/${modrinth_id}",
+    "issues": "https://github.com/${github_repository}/issues",
+    "sources": "https://github.com/${github_repository}"
+  },
+  "license": "LGPL-3.0-only",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "xyz.eclipseisoffline.bookcopy.fabric.BookCopyFabric"
+    ]
+  },
+  "mixins": [
+    "bookcopy-fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "minecraft": "${minecraft_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.donate": "https://buymeacoffee.com/eclipseisoffline",
+        "modmenu.buymeacoffee": "https://buymeacoffee.com/eclipseisoffline",
+        "modmenu.modrinth": "https://modrinth.com/mod/${modrinth_id}"
+      }
+    }
+  }
+}
