@@ -137,7 +137,7 @@ public abstract class BookCopy {
         List<String> pageStrings = savedBook.pages();
         int slot = context.getSource().getPlayer().getInventory().getSelectedSlot();
         context.getSource().getPlayer().connection.send(new ServerboundEditBookPacket(slot, pageStrings, sign ? savedBook.title() : Optional.empty()));
-        context.getSource().sendSuccess(Component.literal("Read book from file"));
+        context.getSource().sendFeedback(Component.literal("Read book from file"));
         if (sign && savedBook.title().isEmpty()) {
             context.getSource().sendError(Component.literal("Your book wasn't signed because the saved copy didn't have a title saved!"));
             context.getSource().sendError(Component.literal("Please sign the book with the title you'd like, and save it again, for the sign feature to work."));
@@ -224,7 +224,7 @@ public abstract class BookCopy {
             throw new SimpleCommandExceptionType(Component.literal("Failed saving book to file (an error occurred while saving, please check your Minecraft logs)")).create();
         }
 
-        context.getSource().sendSuccess(Component.literal("Saved book to file"));
+        context.getSource().sendFeedback(Component.literal("Saved book to file"));
         return 0;
     }
 }

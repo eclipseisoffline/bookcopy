@@ -14,13 +14,13 @@ import java.util.Objects;
 
 public interface ClientCommandSource extends SharedSuggestionProvider {
 
-    default void sendSuccess(Component message) {
+    default void sendFeedback(Component message) {
         getClient().gui.getChat().addClientSystemMessage(message);
         getClient().getNarrator().saySystemChatQueued(message);
     }
 
     default void sendError(Component message) {
-        sendSuccess(Component.empty().append(message).withStyle(ChatFormatting.RED));
+        sendFeedback(Component.empty().append(message).withStyle(ChatFormatting.RED));
     }
 
     default Minecraft getClient() {
