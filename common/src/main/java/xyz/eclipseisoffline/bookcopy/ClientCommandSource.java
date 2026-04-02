@@ -27,11 +27,11 @@ public interface ClientCommandSource extends SharedSuggestionProvider {
         return Minecraft.getInstance();
     }
 
-    default LocalPlayer getPlayer() {
+    default LocalPlayer getLocalPlayer() {
         return Objects.requireNonNull(getClient().player, "player must not be null");
     }
 
-    default ClientLevel getLevel() {
+    default ClientLevel getClientLevel() {
         return Objects.requireNonNull(getClient().level, "level must not be null");
     }
 

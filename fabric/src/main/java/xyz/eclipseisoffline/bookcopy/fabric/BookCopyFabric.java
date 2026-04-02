@@ -19,7 +19,7 @@ public class BookCopyFabric extends BookCopy implements ClientModInitializer {
 
     @Override
     protected void registerClientCommands(Consumer<CommandDispatcher<ClientCommandSource>> registerer) {
-        //noinspection unchecked,rawtypes - FabricClientCommandSource implements ClientCommandSource via mixins
+        //noinspection unchecked,rawtypes - FabricClientCommandSource implements ClientCommandSource via mixin
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, _) -> registerer.accept((CommandDispatcher) dispatcher));
     }
 

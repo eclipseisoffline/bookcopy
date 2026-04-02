@@ -98,7 +98,7 @@ public abstract class BookCopy {
     }
 
     private int importBook(CommandContext<ClientCommandSource> context, String name, boolean sign) throws CommandSyntaxException {
-        ItemStack book = context.getSource().getPlayer().getMainHandItem();
+        ItemStack book = context.getSource().getLocalPlayer().getMainHandItem();
         if (!book.is(Items.WRITABLE_BOOK)) {
             throw new SimpleCommandExceptionType(Component.literal("Must hold a book and quill")).create();
         }
@@ -135,8 +135,8 @@ public abstract class BookCopy {
         }
 
         List<String> pageStrings = savedBook.pages();
-        int slot = context.getSource().getPlayer().getInventory().getSelectedSlot();
-        context.getSource().getPlayer().connection.send(new ServerboundEditBookPacket(slot, pageStrings, sign ? savedBook.title() : Optional.empty()));
+        int slot = context.getSource().getLocalPlayer().getInventory().getSelectedSlot();
+        context.getSource().getLocalPlayer().connection.send(new ServerboundEditBookPacket(slot, pageStrings, sign ? savedBook.title() : Optional.empty()));
         context.getSource().sendFeedback(Component.literal("Read book from file"));
         if (sign && savedBook.title().isEmpty()) {
             context.getSource().sendError(Component.literal("Your book wasn't signed because the saved copy didn't have a title saved!"));
@@ -146,7 +146,7 @@ public abstract class BookCopy {
     }
 
     private int exportBook(CommandContext<ClientCommandSource> context, String name, boolean overwrite) throws CommandSyntaxException {
-        ItemStack book = context.getSource().getPlayer().getMainHandItem();
+        ItemStack book = context.getSource().getLocalPlayer().getMainHandItem();
         if (!book.is(Items.WRITABLE_BOOK) && !book.is(Items.WRITTEN_BOOK)) {
             throw new SimpleCommandExceptionType(Component.literal("Must hold a book and quill or written book")).create();
         }
