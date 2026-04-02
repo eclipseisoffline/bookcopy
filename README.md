@@ -6,6 +6,8 @@
 [![Discord Badge](https://img.shields.io/badge/chat-discord-%235865f2)](https://discord.gg/CNNkyWRkqm)
 [![Github Badge](https://img.shields.io/badge/github-bookcopy-white?logo=github)](https://github.com/eclipseisoffline/bookcopy)
 ![GitHub License](https://img.shields.io/github/license/eclipseisoffline/bookcopy)
+![Available for Fabric](https://img.shields.io/badge/available_for-fabric-_?color=%23dbd0b4)
+![Available for NeoForge](https://img.shields.io/badge/available_for-NeoForge-_?color=%23e58c53)
 
 This mod adds a simple client-side `/bookcopy` command, which allows you to save written books and
 import them later in another book.
