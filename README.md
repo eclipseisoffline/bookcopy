@@ -30,7 +30,8 @@ For support and/or any questions you may have, feel free to join [my discord](ht
 
 | Minecraft Version  | Status       |
 |--------------------|--------------|
-| 26.1.x             | ✅ Current    |
+| 26.2.x             | ✅ Current    |
+| 26.1.x             | ✔️ Available |
 | 1.21.6+7+8+9+10+11 | ✔️ Available |
 | 1.21.5             | ✔️ Available |
 | 1.21.4             | ✔️ Available |

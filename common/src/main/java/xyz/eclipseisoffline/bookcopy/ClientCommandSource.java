@@ -15,7 +15,7 @@ import java.util.Objects;
 public interface ClientCommandSource extends SharedSuggestionProvider {
 
     default void sendFeedback(Component message) {
-        getClient().gui.getChat().addClientSystemMessage(message);
+        getClient().gui.hud.getChat().addClientSystemMessage(message);
         getClient().getNarrator().saySystemChatQueued(message);
     }
 
