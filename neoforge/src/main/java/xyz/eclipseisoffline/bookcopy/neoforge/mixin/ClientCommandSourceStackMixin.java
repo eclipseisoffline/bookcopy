@@ -10,16 +10,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.ClientCommandSourceStack;
-import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import xyz.eclipseisoffline.bookcopy.ClientCommandSource;
 
 @Mixin(ClientCommandSourceStack.class)
 public abstract class ClientCommandSourceStackMixin extends CommandSourceStack implements ClientCommandSource {
 
-    public ClientCommandSourceStackMixin(CommandSource source, Vec3 position, Vec2 rotation, ServerLevel level, PermissionSet permissions, String textName,
-                                         Component displayName, MinecraftServer server, @Nullable Entity entity) {
-        super(source, position, rotation, level, permissions, textName, displayName, server, entity);
+    public ClientCommandSourceStackMixin(CommandSource source, Vec3 position, Vec2 rotation, ServerLevel level,
+                                         PermissionSet permissions, MinecraftServer server, Entity entity) {
+        super(source, position, rotation, level, permissions, server, entity);
     }
 
     @Override
